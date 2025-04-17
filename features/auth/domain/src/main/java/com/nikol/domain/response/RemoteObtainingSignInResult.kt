@@ -2,9 +2,9 @@ package com.nikol.domain.response
 
 sealed class RemoteObtainingSignInResult {
     data class Success(
-        val accessToken: String,
-        val refreshToken: String,
-        val expiresIn: Long
+        val token: String = "",
+        val refreshToken: String = "",
+        val expired: Long = 0L
     ) : RemoteObtainingSignInResult()
 
     data class NetworkError(val message: String) : RemoteObtainingSignInResult()
