@@ -32,43 +32,35 @@ class SecureAuthStorage(context: Context) {
 
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
-        private const val KEY_REFRESH_TOKEN = "refresh_token"
         private const val KEY_EXPIRES_AT = "expires_at"
-        private const val KEY_LOGIN = "login"
+        private const val KEY_AUTHORIZATION_CODE = "authorization_code"  // Новый ключ для кода
     }
 
-    fun saveTokens(
-        accessToken: String,
-        refreshToken: String,
-        expiresIn: Long,
-        login: String? = null
-    ) {
+    // Сохранение токенов и authorizationCode
+    fun saveTokens(accessToken: String, expiresIn: Long, authorizationCode: String? = null) {
         val expiresAt = System.currentTimeMillis() + expiresIn * 1000
         encryptedPrefs.edit().apply {
             putString(KEY_ACCESS_TOKEN, accessToken)
-            putString(KEY_REFRESH_TOKEN, refreshToken)
             putLong(KEY_EXPIRES_AT, expiresAt)
-            login?.let { putString(KEY_LOGIN, it) }
+            authorizationCode?.let { putString(KEY_AUTHORIZATION_CODE, authorizationCode) }
             apply()
         }
     }
 
+    // Получение токенов и authorizationCode
     fun getAccessToken(): String? = encryptedPrefs.getString(KEY_ACCESS_TOKEN, null)
-
-    fun getRefreshToken(): String? = encryptedPrefs.getString(KEY_REFRESH_TOKEN, null)
 
     fun getTokenExpiration(): Long = encryptedPrefs.getLong(KEY_EXPIRES_AT, 0)
 
-    fun getLogin(): String? = encryptedPrefs.getString(KEY_LOGIN, null)
+    fun getAuthorizationCode(): String? = encryptedPrefs.getString(KEY_AUTHORIZATION_CODE, null)  // Новый метод для получения кода
 
     fun isAccessTokenExpired(): Boolean {
         val expiresAt = getTokenExpiration()
         return System.currentTimeMillis() >= expiresAt
     }
 
+    // Очистка токенов и authorizationCode
     fun clearTokens() {
         encryptedPrefs.edit { clear() }
     }
 }
-
-

@@ -56,6 +56,8 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
 
+    implementation(libs.androidx.browser)
+
     implementation(project(":common:navigation"))
     implementation(project(":common:dataAuth"))
     implementation(project(":features:auth:domain"))

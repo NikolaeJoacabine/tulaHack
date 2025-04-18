@@ -7,13 +7,15 @@ import com.nikol.domain.state.ErrorType
 
 class SignInUseCase(private val authFeatureRepository: AuthFeatureRepository) {
 
-    suspend fun tryAutoSignIn(): AuthState {
+    suspend fun signInWithCode(authorizationCode: String?): AuthState {
+
         val currentUser = authFeatureRepository.checkoutCurrentUser()
+
 
         return if (currentUser == null) {
             AuthState.Unauthenticated(type = null, message = null)
         } else {
-            when (val result = authFeatureRepository.autoSignIn()) {
+            when (val result = authFeatureRepository.getAccessTokenFromCode(authorizationCode)){
                 is RemoteObtainingSignInResult.Success -> AuthState.Authenticated
                 is RemoteObtainingSignInResult.LogInError -> AuthState.Unauthenticated(
                     type = ErrorType.LOGIN,
@@ -31,8 +33,8 @@ class SignInUseCase(private val authFeatureRepository: AuthFeatureRepository) {
         }
     }
 
-    suspend fun manualSignIn(login: String, password: String): AuthState {
-        return when (val result = authFeatureRepository.signIn(login, password)) {
+    suspend fun manualSignIn(authorizationCode: String): AuthState {
+        return when (val result = authFeatureRepository.getAccessTokenFromCode(authorizationCode)){
             is RemoteObtainingSignInResult.Success -> AuthState.Authenticated
             is RemoteObtainingSignInResult.LogInError -> AuthState.Unauthenticated(
                 type = ErrorType.LOGIN,
