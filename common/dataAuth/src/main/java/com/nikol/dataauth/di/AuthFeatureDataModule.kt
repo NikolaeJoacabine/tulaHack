@@ -13,17 +13,5 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class AuthFeatureDataModule {
 
-    @Provides
-    @Singleton
-    fun provideAuthApi(retrofit: Retrofit) {
 
-    }
-
-
-
-    @Provides
-    @Singleton
-    fun provideAuthFeatureRepository(): AuthFeatureRepository {
-        return AuthFeatureRepositoryImpl()
-    }
 }

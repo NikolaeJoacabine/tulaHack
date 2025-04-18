@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.nikol.domain.state.AuthState
+import com.nikol.presentation.navigation.AuthFeatureScreens
 
 @Composable
 fun SignInScreen(
@@ -25,10 +26,15 @@ fun SignInScreen(
 
         Text("вход")
         Spacer(Modifier.size(40.dp))
-        when(val state = authState){
-            is AuthState.Unauthenticated ->{
+        when (val state = authState) {
+            is AuthState.Unauthenticated -> {
                 Text("${state.type}")
             }
+
+            is AuthState.Authenticated -> {
+                navController.navigate(AuthFeatureScreens.MainScreen.route)
+            }
+
             else -> {
 
             }
